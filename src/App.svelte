@@ -1,76 +1,132 @@
-<script lang=ts>
+<script >
   import { tweened } from "svelte/motion";
   import { quadInOut as easing } from "svelte/easing";
-  import levels from "./levelString";
-  import Level from "./level";
-  import State from "./state";
-  import type { Direction } from "./direction";
+  import Player from "./Player.svelte";
+  import maps from "./maps";
+  import Crate from "./Crate.svelte";
 
-  let level = new Level(levels[0]);
-  let state = new State(level);
+  let level = 0;
 
-  const move = (dir: Direction) => {
-    state.move(dir);
+  const grid = maps[level].map.split("\n").map((d, row) =>
+    d
+      .trim()
+      .split("")
+      .map((value, column) => ({
+        value,
+        column,
+        row,
+      }))
+  );
+  
+  $: height = maps[level].height;
+  $: width = maps[level].width; 
+
+  const cells = grid.reduce(
+    (acc, curr) => [...acc, ...curr.map((cell) => ({ ...cell }))],
+    []
+  );
+  const targets = cells.filter(({ value }) => value === "t" || value === "m");
+  let crates = cells
+    .map((cell) => ({ ...cell }))
+    .filter(({ value }) => value === "c" || value === "m");
+
+  const { column: pc, row: pr } = cells.find(({ value }) => value === "p");
+
+  let playerPosition = {
+      column: pc,
+      row: pr,
+    }
+
+  const dirs = {
+    up: [0, -1],
+    right: [1, 0],
+    down: [0, 1],
+    left: [-1, 0],
   };
 
-  const move = (dir: Direction) => {
+  let isMoving = false;
+  let isResetting = false;
+  let hasWon = false;
 
+  const updatePlayer = async (dir) => {
+    if (isMoving || isResetting) return;
 
+    const [dc, dr] = dirs[dir];
+    const { column: pc, row: pr } = playerPosition;
+    const column = pc + dc;
+    const row = pr + dr;
+
+    if (grid[row][column].value === "w") return;
+
+    const crateIndex = crates.findIndex(
+      ({ column: cc, row: rc }) => cc === column && rc === row
+    );
+
+    if (crateIndex !== -1) {
+      const nc = column + dc;
+      const nr = row + dr;
+
+      if (grid[nr][nc].value === "w") return;
+      if (crates.find(({ column: cc, row: rc }) => cc === nc && rc === nr))
+        return;
+    }
+
+    isMoving = true;
+
+    if (crateIndex !== -1) {
+      playerPosition = 
+        {
+          column,
+          row,
+        }
+      crates[crateIndex].column = column + dc;
+      crates[crateIndex].row = row + dr;
 
       hasWon = crates.every(({ column: cc, row: cr }) =>
         targets.some(({ column: tc, row: tr }) => cc === tc && cr === tr)
       );
-    
+    } else {
+      playerPosition = {
+        column,
+        row,
+      }
+    }
+
+    isMoving = false;
   };
 
+  const scale = tweened(1, { easing, duration: 300 });
 
-  //const handleReset = async () => {
+  const handleReset = async () => {
+    if (isMoving || isResetting) return;
 
-  //  isResetting = true;
+    isResetting = true;
 
-  //  await scale.set(0);
+    await scale.set(0);
 
-  //  await player.set(
-  //    {
-  //      column: pc,
-  //      row: pr,
-  //    },
-  //    { duration: 100 }
-  //  );
-  //  crates = grid
-  //    .reduce((acc, curr) => [...acc, ...curr.map((cell) => ({ ...cell }))], [])
-  //    .filter(({ value }) => value === "c" || value === "m");
+    playerPosition = 
+      {
+        column: pc,
+        row: pr,
+      }
+    crates = grid
+      .reduce((acc, curr) => [...acc, ...curr.map((cell) => ({ ...cell }))], [])
+      .filter(({ value }) => value === "c" || value === "m");
 
-  //  hasWon = false;
+    hasWon = false;
 
-  //  await scale.set(1);
-  //  isResetting = false;
-  //};
+    await scale.set(1);
+    isResetting = false;
+  };
 </script>
 
 <article>
-  <svg viewBox="0 0 {level.height} {level.width}">
+  <svg viewBox="0 0 {width} {height}">
     <defs>
       <radialGradient id="gradient-t">
         <stop stop-color="#f2f7fb" offset="0" />
         <stop stop-color="#85cde6" offset="1" />
       </radialGradient>
-
-      <pattern
-        id="pattern-b"
-        viewBox="0 0 1 1"
-        width="1"
-        height="1"
-        patternUnits="userSpaceOnUse"
-      >
-        <rect fill="#f9d29b" width="1" height="1" />
-        <g fill="#e2b281">
-          <rect x="0.25" y="0.2" width="0.1" height="0.1" />
-          <rect x="0.65" y="0.4" width="0.1" height="0.1" />
-          <rect x="0.65" y="0.8" width="0.1" height="0.1" />
-          <rect x="0.252" y="0.6" width="0.1" height="0.1" />
-        </g>
-      </pattern>
 
       <g id="cell-w">
         <g stroke="#251311" stroke-width="0.02">
@@ -96,51 +152,7 @@
           <circle r="0.18" />
         </g>
       </g>
-
-      <g id="cell-crate">
-        <g transform="translate(0.1 0.1)" stroke="#411001" stroke-width="0.05">
-          <rect width="0.8" height="0.8" />
-          <g transform="translate(0.1 0.1)">
-            <rect width="0.6" height="0.6" />
-            <path
-              transform="translate(0.6 0) scale(-1 1)"
-              d="M 0.1 0 L 0.6 0.5 0.6 0.6 0.5 0.6 0 0.1 0 0z"
-            />
-            <path d="M 0.1 0 L 0.6 0.5 0.6 0.6 0.5 0.6 0 0.1 0 0z" />
-          </g>
-        </g>
-      </g>
-
-      <g id="cell-player">
-        <g transform="translate(0.5 0.5)" stroke="#411001" stroke-width="0.04">
-          <circle fill="#feb16b" r="0.3" />
-          {#if hasWon}
-            <g fill="none" stroke-linecap="round">
-              <path d="M -0.15 -0.07 l 0.06 -0.04 0.06 0.04 0.06" />
-              <path
-                transform="scale(-1 1)"
-                d="M -0.15 -0.07 l 0.06 -0.04 0.06 0.04"
-              />
-              <path
-                stroke-linecap="round"
-                d="M -0.12 0.09 l 0.12 0.05 0.12 -0.05"
-              />
-            </g>
-          {:else}
-            <g fill="none" stroke-linecap="round">
-              <path d="M -0.16 -0.08 l 0.06 0.03 0.06 -0.03 0.06" />
-              <path
-                transform="scale(-1 1)"
-                d="M -0.16 -0.08 l 0.06 0.03 0.06 -0.03"
-              />
-              <path stroke-linecap="round" d="M -0.09 0.12 h 0.18" />
-            </g>
-          {/if}
-        </g>
-      </g>
     </defs>
-
-    <rect fill="url(#pattern-b)" width={columns} height={rows} />
 
     <g>
       {#each grid.reduce((acc, curr) => [...acc, ...curr], []) as { value, column: x, row: y }}
@@ -149,29 +161,12 @@
     </g>
 
     <g>
-      {#each crates as { column, row }}
-        <g transform="translate({column} {row})">
-          <g
-            transform="translate(0.5 0.5) scale({$scale}) translate(-0.5 -0.5)"
-          >
-            <use
-              fill={targets.some(
-                ({ column: tc, row: tr }) => tc === column && tr === row
-              )
-                ? "#98453d"
-                : "#ed8e30"}
-              href="#cell-crate"
-            />
-          </g>
-        </g>
+      {#each crates as crate}
+        <Crate position={crate} />
       {/each}
     </g>
 
-    <g transform="translate({$player.column} {$player.row})">
-      <g transform="translate(0.5 0.5) scale({$scale}) translate(-0.5 -0.5)">
-        <use href="#cell-player" />
-      </g>
-    </g>
+    <Player {playerPosition} {hasWon}/>
   </svg>
 
   <div>
