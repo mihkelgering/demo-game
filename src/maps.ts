@@ -1,4 +1,9 @@
 const maps = [
+  `wwwww
+    wpeew
+    wectw
+    weeew
+    wwwww`,
   `eewwwwwe
 	wwweeewe
 	wtpceewe

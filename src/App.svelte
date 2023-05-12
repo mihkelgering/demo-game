@@ -59,6 +59,11 @@
     }
 
     hasWon = checkWin();
+    
+    if (hasWon) {
+      level += 1;
+      handleReset();
+    }
   };
   
   const handleReset = async () => {
