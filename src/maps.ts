@@ -1,6 +1,5 @@
 const maps = [
-  {
-    map: `eewwwwwe
+  `eewwwwwe
 	wwweeewe
 	wtpceewe
 	wwwectwe
@@ -9,9 +8,6 @@ const maps = [
 	wcemcctw
 	weeeteew
 	wwwwwwww`,
-    height: 9,
-    width: 8,
-  },
 ];
 
 export default maps;

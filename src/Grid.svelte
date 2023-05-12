@@ -1,17 +1,5 @@
 <script>
-    export let map = ""
-
-    $: grid = map.split("\n").map((d, row) =>
-    d
-      .trim()
-      .split("")
-      .map((value, column) => ({
-        value,
-        column,
-        row,
-      }))
-    );
-
+    export let grid = [];
 </script>
 
 <g>
@@ -48,7 +36,7 @@
         </g>
     </defs>
 
-    {#each grid.reduce((acc, curr) => [...acc, ...curr], []) as { value, column: x, row: y }}
+    {#each grid  as { value, column: x, row: y }}
       <use {x} {y} href="#cell-{value}" />
     {/each}
 </g>

@@ -1,20 +1,9 @@
 <script>
-  import { tweened } from "svelte/motion";
-  import { quadInOut as easing } from "svelte/easing";
-
   export let position = { column: 0, row: 0, value: "" };
-
-  const crate = tweened(
-    undefined,
-    { easing, duration: 250 }
-  );
-
-  $: crate.set(position);
-
 </script>
 
-<g transform="translate({$crate.column} {$crate.row})">
-    <g transform="translate(0.1 0.1)" stroke="#411001" stroke-width="0.05">
+<g transform="translate({position.column} {position.row})" class='crate'>
+    <g transform="translate(0.1 0.1)" stroke="#411001" stroke-width="0.05" fill="#ed8e30">
       <rect width="0.8" height="0.8" />
       <g transform="translate(0.1 0.1)">
         <rect width="0.6" height="0.6" />
@@ -26,3 +15,9 @@
       </g>
     </g>
 </g>
+
+<style>
+ .crate {
+    transition: 250ms;
+  }
+</style>
