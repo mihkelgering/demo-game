@@ -5,7 +5,7 @@ const maps = [
 	wwwectwe
 	wtwwcewe
 	weweteww
-	wcemcctw
+	wceccctw
 	weeeteew
 	wwwwwwww`,
 ];
