@@ -10,8 +10,39 @@
     dispatch('reset')
   }
 
+  function onkeydown(event) {
+        // `keydown` event is fired while the physical key is held down.
+
+        // Assuming you only want to handle the first press, we early
+        // return to skip.
+        if (event.repeat) return;
+        console.log(event.key)
+        // In the switch-case we're updating our boolean flags whenever the
+        // desired bound keys are pressed.
+        switch(event.key) {
+          case "ArrowUp":
+            move("up");
+            break;
+          case "ArrowDown":
+            move("down");
+            break;
+          case "ArrowLeft":
+            move("left");
+            break;
+          case "ArrowRight":
+            move("right");
+            break;
+          case "r":
+            //TODO
+            break;
+        }     
+    }
+
 
 </script>
+<svelte:window
+    on:keydown={onkeydown}
+/>
  
 <div>
  <button
