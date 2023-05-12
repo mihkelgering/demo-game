@@ -9,33 +9,21 @@
   const reset = () => {
     dispatch('reset')
   }
-
+  
+  // TODO: Throttle events
   function onkeydown(event) {
-        // `keydown` event is fired while the physical key is held down.
-
-        // Assuming you only want to handle the first press, we early
-        // return to skip.
-        if (event.repeat) return;
-        console.log(event.key)
-        // In the switch-case we're updating our boolean flags whenever the
-        // desired bound keys are pressed.
-        switch(event.key) {
-          case "ArrowUp":
-            move("up");
-            break;
-          case "ArrowDown":
-            move("down");
-            break;
-          case "ArrowLeft":
-            move("left");
-            break;
-          case "ArrowRight":
-            move("right");
-            break;
-          case "r":
-            //TODO
-            break;
-        }     
+        if event.key == 'ArrowUp' || event.key == 'w'{
+          move("up");
+        }
+        if else event.key == 'ArrowDown' || event.key == 's'{
+          move("down");
+        }
+        if else event.key == 'ArrowLeft' || event.key == 'a'{
+          move("left");
+        }
+        if else event.key == 'ArrowRight' || event.key == 'd'{
+          move("right");
+        }
     }
 
 
