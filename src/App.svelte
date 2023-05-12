@@ -1,167 +1,51 @@
 <script lang=ts>
-  import { tweened, type Tweened } from "svelte/motion";
+  import { tweened } from "svelte/motion";
   import { quadInOut as easing } from "svelte/easing";
-  import levels from "./levels";
+  import levels from "./levelString";
+  import Level from "./level";
+  import State from "./state";
+  import type { Direction } from "./direction";
 
-  interface Tile {
-    value: string;
-    column: number;
-    row: number;
-  }
+  let level = new Level(levels[0]);
+  let state = new State(level);
 
-  interface Level {
-    grid: Tile[][];
-    height: number;
-    width: number;
-    targets: Tile[];
-  }
-
-  interface Player {
-    column: number;
-    row: number;
-  }
-
-  interface State {
-    player: Tweened<Player>;
-    crates: Tile[];
-    hasWon: boolean;
-  }
-
-  const levelStringToLevelObject = (levelString: string) => {
-    let level: Level;
-    level.targets = [];
-    level.grid = levelString
-      .split("\n")
-      .map((d, row) =>
-        d
-          .trim()
-          .split("")
-          .map((value, column) => (
-            {
-              value,
-              column,
-              row,
-            }))
-      );
-    level.width = level.grid[0].length;
-    level.height = level.grid.length;
-    level.targets = level.grid.flat().filter(({ value }) => value === "t");
-
-    return level;
-  }
-
-  const level = levelStringToLevelObject(levels[0]);
-
-  const initState = (level: Level) : State => {
-    let player = level.grid.flat().find(({ value }) => value === "p");
-    let crates = level.grid.flat().filter(({ value }) => value === "c");
-
-    return {
-      player: tweened({column: player.column, row: player.row}, { easing, duration: 250 }),
-      crates,
-      hasWon: false,
-    };
-  }
-
-  const state = initState(level);
-
-  const dirs = {
-    up: [0, -1],
-    right: [1, 0],
-    down: [0, 1],
-    left: [-1, 0],
+  const move = (dir: Direction) => {
+    state.move(dir);
   };
 
-  let isMoving = false;
-  let isResetting = false;
+  const move = (dir: Direction) => {
 
-  const updatePlayer = async (dir) => {
-    if (isMoving || isResetting) return;
 
-    const [dc, dr] = dirs[dir];
-    const { column: pc, row: pr } = $player;
-    const column = pc + dc;
-    const row = pr + dr;
-
-    if (level.grid[row][column].value === "w") return;
-
-    const crateIndex = state.crates.findIndex(
-      ({ column: cc, row: rc }) => cc === column && rc === row
-    );
-
-    if (crateIndex !== -1) {
-      const nc = column + dc;
-      const nr = row + dr;
-
-      if (level.grid[nr][nc].value === "w") return;
-      if (state.crates.find(({ column: cc, row: rc }) => cc === nc && rc === nr))
-        return;
-    }
-
-    isMoving = true;
-
-    if (crateIndex !== -1) {
-      await player.set(
-        {
-          column,
-          row,
-        },
-        {
-          interpolate: (from, to) => (t) => {
-            const { column: fc, row: fr } = from;
-            const { column: tc, row: tr } = to;
-            const column = fc + (tc - fc) * t;
-            const row = fr + (tr - fr) * t;
-            crates[crateIndex].column = column + dc;
-            crates[crateIndex].row = row + dr;
-            return {
-              column,
-              row,
-            };
-          },
-        }
-      );
-      crates[crateIndex].column = column + dc;
-      crates[crateIndex].row = row + dr;
 
       hasWon = crates.every(({ column: cc, row: cr }) =>
         targets.some(({ column: tc, row: tr }) => cc === tc && cr === tr)
       );
-    } else {
-      await player.set({
-        column,
-        row,
-      });
-    }
-
-    isMoving = false;
+    
   };
 
-  const scale = tweened(1, { easing, duration: 300 });
 
-  const handleReset = async () => {
-    if (isMoving || isResetting) return;
+  //const handleReset = async () => {
 
-    isResetting = true;
+  //  isResetting = true;
 
-    await scale.set(0);
+  //  await scale.set(0);
 
-    await player.set(
-      {
-        column: pc,
-        row: pr,
-      },
-      { duration: 100 }
-    );
-    crates = grid
-      .reduce((acc, curr) => [...acc, ...curr.map((cell) => ({ ...cell }))], [])
-      .filter(({ value }) => value === "c" || value === "m");
+  //  await player.set(
+  //    {
+  //      column: pc,
+  //      row: pr,
+  //    },
+  //    { duration: 100 }
+  //  );
+  //  crates = grid
+  //    .reduce((acc, curr) => [...acc, ...curr.map((cell) => ({ ...cell }))], [])
+  //    .filter(({ value }) => value === "c" || value === "m");
 
-    hasWon = false;
+  //  hasWon = false;
 
-    await scale.set(1);
-    isResetting = false;
-  };
+  //  await scale.set(1);
+  //  isResetting = false;
+  //};
 </script>
 
 <article>
