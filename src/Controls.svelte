@@ -9,9 +9,28 @@
   const reset = () => {
     dispatch('reset')
   }
+  
+  // TODO: Throttle events
+  function onkeydown(event) {
+        if event.key == 'ArrowUp' || event.key == 'w'{
+          move("up");
+        }
+        if else event.key == 'ArrowDown' || event.key == 's'{
+          move("down");
+        }
+        if else event.key == 'ArrowLeft' || event.key == 'a'{
+          move("left");
+        }
+        if else event.key == 'ArrowRight' || event.key == 'd'{
+          move("right");
+        }
+    }
 
 
 </script>
+<svelte:window
+    on:keydown={onkeydown}
+/>
  
 <div>
  <button
