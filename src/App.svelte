@@ -1,13 +1,12 @@
 <script lang="ts">
-  import { tweened } from "svelte/motion";
-  import { quadInOut as easing } from "svelte/easing";
   import Player from "./Player.svelte";
-  import maps from "./maps";
   import Crate from "./Crate.svelte";
   import Grid from "./Grid.svelte";
   import Controls from "./Controls.svelte";
+  import maps from "./maps";
 
   let level = 0;
+  let hasWon = false;
 
   interface Tile {
     value: string;
@@ -15,7 +14,7 @@
     row: number;
   }
 
-  const grid: Tile[][] = maps[level].split("\n").map((d, row) =>
+  $: grid = maps[level].split("\n").map((d, row) =>
     d
       .trim()
       .split("")
@@ -26,17 +25,17 @@
       }))
   )
   
-  const columns = grid[0].length;
-  const rows = grid.length; 
+  $: columns = grid[0].length;
+  $: rows = grid.length; 
 
-  const tiles = grid.flat()
-  const staticMap = tiles.map(tile => (tile.value === "c" || tile.value === "p") ? {...tile, value: "e"} : tile)
-  const targets = tiles.filter(({ value }) => value === "t");
-  let crates = tiles.filter(({ value }) => value === "c");
-  let player = tiles.find(({ value }) => value === "p");
-  let hasWon = false;
+  $: tiles = grid.flat()
+  $: staticMap = tiles.map(tile => (tile.value === "c" || tile.value === "p") ? {...tile, value: "e"} : tile)
+  $: targets = tiles.filter(({ value }) => value === "t");
+  $: crates = tiles.filter(({ value }) => value === "c").map((crate) => ({ ...crate}));
+  $: player = tiles.find(({ value }) => value === "p");
 
-  let playerPosition = {
+
+  $: playerPosition = {
     column: player.column,
     row: player.row,
   };
@@ -60,13 +59,14 @@
     }
 
     hasWon = checkWin();
+    
+    if (hasWon) {
+      level += 1;
+      handleReset();
+    }
   };
-
-  const scale = tweened(1, { easing, duration: 300 });
   
   const handleReset = async () => {
-  
-    await scale.set(0);
   
     playerPosition =
       {
@@ -74,13 +74,9 @@
         row: player.row,
       };
 
-    crates = grid
-      .reduce((acc, curr) => [...acc, ...curr.map((cell) => ({ ...cell }))], [])
-      .filter(({ value }) => value === "c" || value === "m");
+    crates = tiles.filter(({ value }) => value === "c").map((crate) => ({ ...crate}));
   
     hasWon = false;
-  
-    await scale.set(1);
   };
   
   const newPositionIsWall = (row: number, column: number) => {
