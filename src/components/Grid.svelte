@@ -1,5 +1,7 @@
-<script>
-    export let grid = [];
+<script lang='ts'>
+  import { TARGET, WALL } from "../symbols";
+
+  export let grid = [];
 </script>
 
 <g>
@@ -10,7 +12,7 @@
           <stop stop-color="#85cde6" offset="1" />
         </radialGradient>
   
-        <g id="cell-w">
+        <g id={"cell-" + WALL}>
           <g stroke="#251311" stroke-width="0.02">
             <rect fill="#6e523a" width="1" height="1" />
             <g fill="none">
@@ -24,7 +26,7 @@
           </g>
         </g>
   
-        <g id="cell-t">
+        <g id={"cell-" + TARGET}>
           <g
             transform="translate(0.5 0.5)"
             fill="url(#gradient-t)"

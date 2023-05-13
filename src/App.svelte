@@ -1,18 +1,13 @@
 <script lang="ts">
-  import Player from "./Player.svelte";
-  import Crate from "./Crate.svelte";
-  import Grid from "./Grid.svelte";
-  import Controls from "./Controls.svelte";
+  import Player from "./components/Player.svelte";
+  import Crate from "./components/Crate.svelte";
+  import Grid from "./components/Grid.svelte";
+  import Controls from "./components/Controls.svelte";
   import maps from "./maps";
+  import { CRATE, WALL, PLAYER, PLAYER_ON_TARGET, CRATE_ON_TARGET, TARGET, EMPTY } from "./symbols";
 
   let level = 0;
   let hasWon = false;
-
-  interface Tile {
-    value: string;
-    column: number;
-    row: number;
-  }
 
   $: grid = maps[level].split("\n").map((d, row) =>
     d
@@ -29,61 +24,47 @@
   $: rows = grid.length; 
 
   $: tiles = grid.flat()
-  $: staticMap = tiles.map(tile => (tile.value === "c" || tile.value === "p") ? {...tile, value: "e"} : tile)
-  $: targets = tiles.filter(({ value }) => value === "t");
-  $: crates = tiles.filter(({ value }) => value === "c").map((crate) => ({ ...crate}));
-  $: player = tiles.find(({ value }) => value === "p");
-
+  $: staticMap = tiles.map(tile => {
+      if (tile.value === CRATE || tile.value === PLAYER) return {...tile, value: EMPTY}
+      if (tile.value === PLAYER_ON_TARGET || tile.value === CRATE_ON_TARGET) return {...tile, value: TARGET}
+      return tile
+    })
+  $: targets = tiles.filter(({ value }) => value === TARGET || value === PLAYER_ON_TARGET || value === CRATE_ON_TARGET);
+  $: crates = tiles.filter(({ value }) => value === CRATE || value === CRATE_ON_TARGET).map((crate) => ({ ...crate}));
+  $: player = tiles.find(({ value }) => value === PLAYER || value === PLAYER_ON_TARGET);
 
   $: playerPosition = {
     column: player.column,
     row: player.row,
   };
 
-  const updatePlayer = (event) => {
+  const updatePlayer = async (event) => {
 
-    let dir = event.detail.key;
-    let [dc, dr] = dirs[dir];
-
-    let {column, row} = getNewPosition(dc, dr);
+    let [columnDirection, rowDirection] = directions[event.detail.key];
+    let {column, row} = getNewPosition(columnDirection, rowDirection);
 
     if (newPositionIsWall(row, column)) return;
 
-    let canMove = moveCrate(row, column, dc, dr);
+    let canMoveCrate = moveCrate(row, column, columnDirection, rowDirection);
 
-    if (canMove) {
-      playerPosition = {
-        column,
-        row,
-      }
-    }
+    if (canMoveCrate) movePlayer(row, column);
 
-    hasWon = checkWin();
-    
-    if (hasWon) {
-      level += 1;
-      handleReset();
+    if (playerWon()) {
+      advanceLevel();
     }
   };
   
   const handleReset = async () => {
-  
-    playerPosition =
-      {
-        column: player.column,
-        row: player.row,
-      };
-
-    crates = tiles.filter(({ value }) => value === "c").map((crate) => ({ ...crate}));
-  
-    hasWon = false;
+    console.log(player)
+    movePlayer(player.row, player.column)
+    crates = tiles.filter(({ value }) => value === CRATE || value === CRATE_ON_TARGET).map((crate) => ({ ...crate}));
   };
   
   const newPositionIsWall = (row: number, column: number) => {
-    return grid[row][column].value === "w";
+    return grid[row][column].value === WALL;
   };
 
-  const dirs = {
+  const directions = {
     up: [0, -1],
     right: [1, 0],
     down: [0, 1],
@@ -95,11 +76,18 @@
     return {column: pc + dc,  row: pr + dr};
   };
 
-  const checkWin = () => {
+  const playerWon = () => {
     return crates.every(({ column: cc, row: cr }) =>
       targets.some(({ column: tc, row: tr }) => cc === tc && cr === tr)
     );
   };
+
+  const movePlayer = (row: number, column: number) => {
+    playerPosition = {
+      column,
+      row,
+    }
+  }
 
   const moveCrate = (row: number, column: number, dc: number, dr: number) => {
     const crateIndex = crates.findIndex(
@@ -110,24 +98,38 @@
       const nc = column + dc;
       const nr = row + dr;
 
-      if (grid[nr][nc].value === "w") return false;
+      if (grid[nr][nc].value === WALL) return false;
       if (crates.find(({ column: cc, row: rc }) => cc === nc && rc === nr)) return false;
 
       crates[crateIndex].column = column + dc;
       crates[crateIndex].row = row + dr;
+
+      if (targets.some(({ column: tc, row: tr }) => tc === nc && tr === nr)) {
+        crates[crateIndex].value = CRATE_ON_TARGET;
+      } else {
+        crates[crateIndex].value = CRATE;
+      }
     }
 
     return true
   }
 
+  const advanceLevel = async () => {
+    hasWon = true;
+    await new Promise((r) => setTimeout(r, 2000));
+    level += 1;
+    level >= maps.length ? (level = 0) : level;
+    hasWon = false;
+  };
+
 </script>
 
 <article>
   <svg viewBox="0 0 {columns} {rows}">
-   <Grid grid={staticMap}/>
+    <Grid grid={staticMap}/>
 
     {#each crates as crate}
-      <Crate position={crate} />
+      <Crate {crate} />
     {/each}
 
     <Player {playerPosition} {hasWon}/>
@@ -140,6 +142,7 @@
   :global(body) {
     color: #483628;
     background: #f9d29b;
+    overflow-y: hidden;
   }
   article {
     max-width: 30rem;

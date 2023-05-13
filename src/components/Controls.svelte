@@ -12,17 +12,20 @@
   
   // TODO: Throttle events
   function onkeydown(event) {
-        if event.key == 'ArrowUp' || event.key == 'w'{
+        if (event.key == 'ArrowUp' || event.key == 'w') {
           move("up");
         }
-        if else event.key == 'ArrowDown' || event.key == 's'{
+        else if (event.key == 'ArrowDown' || event.key == 's') {
           move("down");
         }
-        if else event.key == 'ArrowLeft' || event.key == 'a'{
+        else if (event.key == 'ArrowLeft' || event.key == 'a') {
           move("left");
         }
-        if else event.key == 'ArrowRight' || event.key == 'd'{
+        else if (event.key == 'ArrowRight' || event.key == 'd') {
           move("right");
+        }
+        else if (event.key == 'r') {
+          reset();
         }
     }
 
@@ -93,6 +96,7 @@
 <style>
  div {
     display: grid;
+    padding-top: 5px;
     grid-template-columns: repeat(3, auto);
     grid-template-areas: ". up ." "left reset right" ". down .";
     grid-auto-rows: auto;

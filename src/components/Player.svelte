@@ -19,7 +19,7 @@
       <circle fill="#feb16b" r="0.3" />
       {#if hasWon}
         <g fill="none" stroke-linecap="round">
-          <path d="M -0.15 -0.07 l 0.06 -0.04 0.06 0.04 0.06" />
+          <path d="M -0.15 -0.07 l 0.06 -0.04 0.06 0.04" />
           <path
             transform="scale(-1 1)"
             d="M -0.15 -0.07 l 0.06 -0.04 0.06 0.04"
@@ -31,7 +31,7 @@
         </g>
       {:else}
         <g fill="none" stroke-linecap="round">
-          <path d="M -0.16 -0.08 l 0.06 0.03 0.06 -0.03 0.06" />
+          <path d="M -0.16 -0.08 l 0.06 0.03 0.06 -0.03" />
           <path
             transform="scale(-1 1)"
             d="M -0.16 -0.08 l 0.06 0.03 0.06 -0.03"
