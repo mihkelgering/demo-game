@@ -12,11 +12,11 @@
 <div>
   {#if !PLAYER_ID}
     <div class="credentials">
-      <p>Enter your personal id</p>
+      <p>Please enter your personal ID code</p>
       <input
         class="credentials-input"
         bind:value={input}
-        placeholder="enter your name"
+        placeholder="enter your personal ID code"
       />
       <button class="credentials-button" on:click={setPlayerId(input)}
         >submit</button
