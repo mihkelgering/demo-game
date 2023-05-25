@@ -1,5 +1,7 @@
-<script>
+<script lang="ts">
+  import api from "./api/api";
   import Game from "./components/Game.svelte";
+  import { type GameState } from "./store";
 
   let PLAYER_ID = null;
   let input = null;
@@ -7,10 +9,19 @@
     PLAYER_ID = id;
     return id;
   };
+
+  let game: GameState = null;
+  let loaded = false;
+
+  async function getGame() {
+    game = await api.get<GameState>("loadGame");
+    loaded = true;
+  }
+  //getGame();
 </script>
 
 <div>
-  {#if !PLAYER_ID}
+  {#if !game.userCookie}
     <div class="credentials">
       <p>Please enter your personal ID code</p>
       <input
