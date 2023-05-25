@@ -1,4 +1,4 @@
-<script lang="ts">
+<script>
   import Game from "./components/Game.svelte";
 
   let PLAYER_ID = null;
@@ -13,8 +13,14 @@
   {#if !PLAYER_ID}
     <div class="credentials">
       <p>Enter your personal id</p>
-      <input bind:value={input} placeholder="enter your name" />
-      <button on:click={setPlayerId(input)}>submit</button>
+      <input
+        class="credentials-input"
+        bind:value={input}
+        placeholder="enter your name"
+      />
+      <button class="credentials-button" on:click={setPlayerId(input)}
+        >submit</button
+      >
     </div>
   {:else}
     <Game />
@@ -28,5 +34,38 @@
     left: 50%;
     transform: translate(-50%, -50%);
     padding: 10px;
+  }
+  .credentials-button {
+  }
+  .credentials-input {
+    text-align: center;
+    width: 25rem;
+    height: 3rem;
+    border-radius: 20px;
+    border-width: 0px;
+  }
+
+  ::placeholder {
+    text-align: center;
+  }
+
+  /* or, for legacy browsers */
+
+  ::-webkit-input-placeholder {
+    text-align: center;
+  }
+
+  :-moz-placeholder {
+    /* Firefox 18- */
+    text-align: center;
+  }
+
+  ::-moz-placeholder {
+    /* Firefox 19+ */
+    text-align: center;
+  }
+
+  :-ms-input-placeholder {
+    text-align: center;
   }
 </style>

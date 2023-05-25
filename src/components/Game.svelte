@@ -142,6 +142,11 @@
     level >= maps.length ? (level = 0) : level;
     hasWon = false;
   };
+
+  const skipLevel = async () => {
+    // POST request to end level with status Skipped and return next level
+    console.log("User want to skip level");
+  };
 </script>
 
 <article>
@@ -154,6 +159,7 @@
 
     <Player {playerPosition} {hasWon} />
   </svg>
+  <button on:click={skipLevel}>Skip</button>
   <Controls on:move={updatePlayer} on:reset={handleReset} />
 </article>
 
