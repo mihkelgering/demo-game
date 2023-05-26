@@ -42,6 +42,8 @@
         >submit</button
       >
     </div>
+  {:else if $game.timeRemaining < 1}
+    <p>TIME IS OVER</p>
   {:else}
     <Game level={$game.levels[0]} />
   {/if}
