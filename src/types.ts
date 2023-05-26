@@ -6,5 +6,6 @@ export interface GameState {
 export interface GameResponse {
     error?: string;
     game?: GameState;
-    idToken?: string;
 }
+
+

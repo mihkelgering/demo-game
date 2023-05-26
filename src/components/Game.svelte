@@ -17,7 +17,7 @@
   import api from "../api/api";
   import type { GameState } from "../types";
 
-  export let level = 0;
+  export let level;
   let hasWon = false;
 
   $: grid = maps[level].split("\n").map((d, row) =>
@@ -139,12 +139,11 @@
   };
 
   const advanceLevel = async (skipped: boolean) => {
+    let response: any =  await endLevel(skipped);
+    if (response) return;
     hasWon = true;
-    await endLevel(skipped);
     await newLevel();
     await new Promise((r) => setTimeout(r, 2000));
-    level += 1;
-    level >= maps.length ? (level = 0) : level;
     hasWon = false;
   };
 

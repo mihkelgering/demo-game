@@ -30,7 +30,6 @@ class Api {
 
   private async extractJsonHandlingErrors(response: Response): Promise<any> {
     let data: any
-    console.log(response)
     if (response.status < 200 || response.status >= 400) {
       return {error: (await response.text()).trim()}
     }

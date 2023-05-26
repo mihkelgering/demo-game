@@ -45,7 +45,7 @@
       >
     </div>
   {:else}
-    <Game />
+    <Game level={$game.levels[0]} />
   {/if}
 </div>
 
