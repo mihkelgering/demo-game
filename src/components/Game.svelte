@@ -182,7 +182,7 @@
 <style>
   :global(body) {
     color: #483628;
-    background: #f9d29b;
+    background: #101419;
     overflow-y: hidden;
   }
   article {

@@ -8,13 +8,13 @@
 
     <defs>
         <radialGradient id="gradient-t">
-          <stop stop-color="#f2f7fb" offset="0" />
-          <stop stop-color="#85cde6" offset="1" />
+          <stop stop-color="#DCF900" offset="0" />
+          <stop stop-color="#8F9910" offset="1" />
         </radialGradient>
   
         <g id={"cell-" + WALL}>
           <g stroke="#251311" stroke-width="0.02">
-            <rect fill="#6e523a" width="1" height="1" />
+            <rect fill="#4C5057" width="1" height="1" />
             <g fill="none">
               <rect width="0.5" height="0.25" />
               <rect x="0.5" width="0.5" height="0.25" />
@@ -30,7 +30,7 @@
           <g
             transform="translate(0.5 0.5)"
             fill="url(#gradient-t)"
-            stroke="#4b6a99"
+            stroke="#8F9910"
             stroke-width="0.05"
           >
             <circle r="0.18" />
