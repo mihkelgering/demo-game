@@ -9,9 +9,6 @@
   setInterval(() => {
     if ($timer > 0) {
       $timer--;
-      game.update((current) => {
-        return { ...current, timeRemaining: $timer };
-      });
     }
   }, 1000);
 
