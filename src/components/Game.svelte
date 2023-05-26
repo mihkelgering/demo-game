@@ -61,6 +61,7 @@
   };
 
   const updatePlayer = async (event) => {
+    if (hasWon) return;
     let [columnDirection, rowDirection] = directions[event.detail.key];
     let { column, row } = getNewPosition(columnDirection, rowDirection);
 
@@ -76,7 +77,7 @@
   };
 
   const handleReset = async () => {
-    console.log(player);
+    if (hasWon) return
     movePlayer(player.row, player.column);
     crates = tiles
       .filter(({ value }) => value === CRATE || value === CRATE_ON_TARGET)
@@ -142,8 +143,9 @@
     let response: any = await endLevel(skipped);
     if (response) return;
     hasWon = true;
-    await newLevel();
     await new Promise((r) => setTimeout(r, 2000));
+    await newLevel();
+    await new Promise((r) => setTimeout(r, 500));
     hasWon = false;
   };
 
