@@ -23,8 +23,8 @@
   {#if timer < 1}
     <p>kek</p>
   {:else}
-    <p>Time: {minutes}:{seconds}</p>
+    <p>Time: {minutes}:{seconds < 10 ? "0" + seconds : seconds}</p>
 
-    <progress value={$timer / original} />
+    <progress value={$timer / 3600} />
   {/if}
 </div>

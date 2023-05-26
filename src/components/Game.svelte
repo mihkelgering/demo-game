@@ -78,7 +78,7 @@
   };
 
   const handleReset = async () => {
-    if (hasWon) return
+    if (hasWon) return;
     movePlayer(player.row, player.column);
     crates = tiles
       .filter(({ value }) => value === CRATE || value === CRATE_ON_TARGET)
