@@ -139,7 +139,7 @@
   };
 
   const advanceLevel = async (skipped: boolean) => {
-    let response: any =  await endLevel(skipped);
+    let response: any = await endLevel(skipped);
     if (response) return;
     hasWon = true;
     await newLevel();
@@ -148,14 +148,14 @@
   };
 
   async function newLevel() {
-    game.update(current => {
-        return { ...current, levels: [1, ...current.levels]}
+    game.update((current) => {
+      return { ...current, levels: [1, ...current.levels] };
     });
     await api.post<GameState>("newLevel", { idLevel: $game.levels[0] });
   }
 
   async function endLevel(skipped: boolean) {
-    await api.patch("endLevel", { skipped });
+    return await api.patch("endLevel", { skipped });
   }
 </script>
 
@@ -170,6 +170,7 @@
     <Player {playerPosition} {hasWon} />
   </svg>
   <button on:click={() => advanceLevel(true)}>Skip</button>
+
   <Controls on:move={updatePlayer} on:reset={handleReset} />
 </article>
 
