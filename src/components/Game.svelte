@@ -16,6 +16,7 @@
   import { game } from "../store";
   import api from "../api/api";
   import type { GameState } from "../types";
+  import Timer from "./Timer.svelte";
 
   export let level;
   let hasWon = false;
@@ -172,6 +173,8 @@
     <Player {playerPosition} {hasWon} />
   </svg>
   <button on:click={() => advanceLevel(true)}>Skip</button>
+
+  <Timer />
 
   <Controls on:move={updatePlayer} on:reset={handleReset} />
 </article>
