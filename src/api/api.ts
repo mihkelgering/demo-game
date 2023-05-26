@@ -4,7 +4,7 @@ export const headers = {'Content-Type': 'application/json; charset=UTF-8', 'Acce
 type Body = object|string|FormData|File
 
 class Api {
-  prefix = 'http://localhost:9990/api/'
+  prefix = '/api/'
 
   request(path: string, init?: RequestInit | {body?: Body, headers?: HeadersInit}): Promise<Response> {
     if (path.startsWith('/')) throw new Error('Invalid path: ' + path)
@@ -14,7 +14,8 @@ class Api {
     return fetch(this.prefix + path, {
       ...init,
       body: body instanceof File || body instanceof FormData || typeof body == 'string' ? body : body && JSON.stringify(body),
-      headers: init?.headers ?? headers
+      headers: init?.headers ?? headers,
+      credentials: 'include'
     })
     .catch(this.handleFetchFailure)
     .finally(() => {

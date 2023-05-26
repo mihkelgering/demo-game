@@ -8,17 +8,26 @@
   let error = "";
 
   async function startGame(idCode: string) {
-    let data: GameResponse = await api.post("newGame", { idCode: idCode, game: "sokoban" }, [["Access-Control-Allow-Credentials", "true"]]);
+    let data: GameResponse = await api.post("newGame", { idCode: idCode, game: "sokoban" });
     if (data.error) {
       error = data.error;
       return;
     }
-    game = data.game;
-    console.log(data.idToken);
+    game = {timeRemaining: 3600, levels: [0]}
+    await api.post<GameState>("newLevel", { idLevel: game.levels[0] });
   };
 
   async function loadGame() {
     game = await api.get<GameState>("loadGame");
+  }
+
+  async function newLevel() {
+    game.levels.unshift(1);
+    game = await api.post<GameState>("newLevel", { idLevel: game.levels[0] });
+  }
+
+  async function endLevel(skipped: boolean) {
+    game = await api.patch("endLevel", { skipped });
   }
 
   loadGame();
@@ -42,7 +51,7 @@
     </div>
   
   {:else}
-    <Game />
+    <Game level={game.levels[0]}/>
   {/if}
 </div>
 
