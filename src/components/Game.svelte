@@ -13,8 +13,11 @@
     TARGET,
     EMPTY,
   } from "../symbols";
+  import { game } from "../store";
+  import api from "../api/api";
+  import type { GameState } from "../types";
 
-  let level = 0;
+  export let level = 0;
   let hasWon = false;
 
   $: grid = maps[level].split("\n").map((d, row) =>
@@ -68,7 +71,7 @@
     if (canMoveCrate) movePlayer(row, column);
 
     if (playerWon()) {
-      advanceLevel();
+      advanceLevel(false);
     }
   };
 
@@ -135,18 +138,24 @@
     return true;
   };
 
-  const advanceLevel = async () => {
+  const advanceLevel = async (skipped: boolean) => {
     hasWon = true;
+    endLevel(skipped);
+    newLevel();
     await new Promise((r) => setTimeout(r, 2000));
     level += 1;
     level >= maps.length ? (level = 0) : level;
     hasWon = false;
   };
 
-  const skipLevel = async () => {
-    // POST request to end level with status Skipped and return next level
-    console.log("User want to skip level");
-  };
+  async function newLevel() {
+    $game.levels.unshift(1);
+    $game = await api.post<GameState>("newLevel", { idLevel: game.levels[0] });
+  }
+
+  async function endLevel(skipped: boolean) {
+    $game = await api.patch("endLevel", { skipped });
+  }
 </script>
 
 <article>
@@ -159,7 +168,7 @@
 
     <Player {playerPosition} {hasWon} />
   </svg>
-  <button on:click={skipLevel}>Skip</button>
+  <button on:click={() => advanceLevel(true)}>Skip</button>
   <Controls on:move={updatePlayer} on:reset={handleReset} />
 </article>
 

@@ -1,40 +1,33 @@
 <script lang="ts">
   import api from "./api/api";
   import Game from "./components/Game.svelte";
-  import { type GameResponse, type GameState } from "./store";
-
-  let game: GameState = null;
+  import { type GameResponse, type GameState } from "./types";
+  import { game } from "./store";
   let idCode = null;
   let error = "";
 
   async function startGame(idCode: string) {
-    let data: GameResponse = await api.post("newGame", { idCode: idCode, game: "sokoban" });
+    let data: GameResponse = await api.post("newGame", {
+      idCode: idCode,
+      game: "sokoban",
+    });
     if (data.error) {
       error = data.error;
       return;
     }
-    game = {timeRemaining: 3600, levels: [0]}
+    $game.set({ timeRemaining: 3600, levels: [0] });
     await api.post<GameState>("newLevel", { idLevel: game.levels[0] });
-  };
+  }
 
   async function loadGame() {
-    game = await api.get<GameState>("loadGame");
-  }
-
-  async function newLevel() {
-    game.levels.unshift(1);
-    game = await api.post<GameState>("newLevel", { idLevel: game.levels[0] });
-  }
-
-  async function endLevel(skipped: boolean) {
-    game = await api.patch("endLevel", { skipped });
+    $game = await api.get<GameState>("loadGame");
   }
 
   loadGame();
 </script>
 
 <div>
-  {#if !game}
+  {#if !$game}
     <div class="credentials">
       <p>Please enter your personal ID code</p>
       <input
@@ -49,9 +42,8 @@
         >submit</button
       >
     </div>
-  
   {:else}
-    <Game level={game.levels[0]}/>
+    <Game level={$game.levels[0]} />
   {/if}
 </div>
 

@@ -1,10 +1,4 @@
-export interface GameState {
-    timeRemaining: number;
-    levels: number[];
-}
+import { type GameState } from "./types";
+import { writable, type Writable } from "svelte/store";
 
-export interface GameResponse {
-    error?: string;
-    game?: GameState;
-    idToken?: string;
-}
+export const game:Writable<GameState> = writable(null);
