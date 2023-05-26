@@ -1,38 +1,46 @@
 <script lang="ts">
   import api from "./api/api";
   import Game from "./components/Game.svelte";
-  import { type GameState } from "./store";
-
-  let PLAYER_ID = null;
-  let input = null;
-  const setPlayerId = (id) => {
-    PLAYER_ID = id;
-    return id;
-  };
+  import { type GameResponse, type GameState } from "./store";
 
   let game: GameState = null;
-  let loaded = false;
+  let idCode = null;
+  let error = "";
 
-  async function getGame() {
+  async function startGame(idCode: string) {
+    let data: GameResponse = await api.post("newGame", { idCode: idCode, game: "sokoban" }, [["Access-Control-Allow-Credentials", "true"]]);
+    if (data.error) {
+      error = data.error;
+      return;
+    }
+    game = data.game;
+    console.log(data.idToken);
+  };
+
+  async function loadGame() {
     game = await api.get<GameState>("loadGame");
-    loaded = true;
   }
-  //getGame();
+
+  loadGame();
 </script>
 
 <div>
-  {#if !game.userCookie}
+  {#if !game}
     <div class="credentials">
       <p>Please enter your personal ID code</p>
       <input
         class="credentials-input"
-        bind:value={input}
+        bind:value={idCode}
         placeholder="enter your personal ID code"
       />
-      <button class="credentials-button" on:click={setPlayerId(input)}
+      {#if error}
+        <p>{error}</p>
+      {/if}
+      <button class="credentials-button" on:click={() => startGame(idCode)}
         >submit</button
       >
     </div>
+  
   {:else}
     <Game />
   {/if}

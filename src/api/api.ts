@@ -4,7 +4,7 @@ export const headers = {'Content-Type': 'application/json; charset=UTF-8', 'Acce
 type Body = object|string|FormData|File
 
 class Api {
-  prefix = 'https://localhost:9990/api/'
+  prefix = 'http://localhost:9990/api/'
 
   request(path: string, init?: RequestInit | {body?: Body, headers?: HeadersInit}): Promise<Response> {
     if (path.startsWith('/')) throw new Error('Invalid path: ' + path)
@@ -29,15 +29,14 @@ class Api {
 
   private async extractJsonHandlingErrors(response: Response): Promise<any> {
     let data: any
-    try {
-      data = response.status == 204 ? await response.text(): await response.json()
-    } catch (e) {
-      console.error('Not a JSON', e)
-      throw {message: 'errors.notJson'}
-    }
+    console.log(response)
     if (response.status < 200 || response.status >= 400) {
-      data.message = data.message || data.reason
-      throw data
+      return {error: (await response.text()).trim()}
+    }
+    try {
+      data = await response.json()
+    } catch (e) {
+      throw {message: 'errors.invalidJson'}
     }
     return data
   }

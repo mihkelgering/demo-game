@@ -1,8 +1,10 @@
-
 export interface GameState {
-    id: number;
-    userCookie: string;
-    game: string;
-    startTime: Date;
-    endTime: Date;
+    timeRemaining: number;
+    levels: number[];
+}
+
+export interface GameResponse {
+    error?: string;
+    game?: GameState;
+    idToken?: string;
 }
