@@ -15,12 +15,14 @@
       error = data.error;
       return;
     }
-    $game.set({ timeRemaining: 3600, levels: [0] });
-    await api.post<GameState>("newLevel", { idLevel: game.levels[0] });
+    //$game.set({ timeRemaining: 3600, levels: [0] });
+    game.set({ timeRemaining: 3600, levels: [0] });
+    await api.post<GameState>("newLevel", { idLevel: $game.levels[0] });
   }
 
   async function loadGame() {
-    $game = await api.get<GameState>("loadGame");
+    console.log($game);
+    game.set(await api.get<GameState>("loadGame"));
   }
 
   loadGame();
@@ -43,7 +45,7 @@
       >
     </div>
   {:else}
-    <Game level={$game.levels[0]} />
+    <Game />
   {/if}
 </div>
 

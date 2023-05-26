@@ -140,8 +140,8 @@
 
   const advanceLevel = async (skipped: boolean) => {
     hasWon = true;
-    endLevel(skipped);
-    newLevel();
+    await endLevel(skipped);
+    await newLevel();
     await new Promise((r) => setTimeout(r, 2000));
     level += 1;
     level >= maps.length ? (level = 0) : level;
@@ -149,12 +149,14 @@
   };
 
   async function newLevel() {
-    $game.levels.unshift(1);
-    $game = await api.post<GameState>("newLevel", { idLevel: game.levels[0] });
+    game.update(current => {
+        return { ...current, levels: [1, ...current.levels]}
+    });
+    await api.post<GameState>("newLevel", { idLevel: $game.levels[0] });
   }
 
   async function endLevel(skipped: boolean) {
-    $game = await api.patch("endLevel", { skipped });
+    await api.patch("endLevel", { skipped });
   }
 </script>
 

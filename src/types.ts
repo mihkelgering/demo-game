@@ -1,5 +1,4 @@
 export interface GameState {
-    set(arg0: { timeRemaining: number; levels: number[]; }): unknown;
     timeRemaining: number;
     levels: number[];
 }
