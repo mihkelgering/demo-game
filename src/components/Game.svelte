@@ -162,7 +162,10 @@
   }
 </script>
 
-<article>
+<div class="gameContainer">
+
+  <Timer />
+  
   <svg viewBox="0 0 {columns} {rows}">
     <Grid grid={staticMap} />
 
@@ -172,21 +175,47 @@
 
     <Player {playerPosition} {hasWon} />
   </svg>
-  <button on:click={() => advanceLevel(true)}>Skip</button>
 
-  <Timer />
+  <button class="skipButton" on:click={() => advanceLevel(true)}>Skip</button>
 
   <Controls on:move={updatePlayer} on:reset={handleReset} />
-</article>
+
+
+</div>
 
 <style>
-  :global(body) {
-    color: #483628;
-    background: #101419;
-    overflow-y: scroll;
+  .gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 98vh;
+    margin-bottom: 2vh;
   }
-  article {
-    max-width: 30rem;
-    margin: 1rem auto;
+
+  @media only screen and (max-width: 500px) {
+    .gameContainer {
+      width: 90%;
+    }
+}
+
+  .skipButton {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    width: 20%;
+    color: white;
+    background-color: #483628;
+    font-size:1.5vh;
+    font-weight: bold;
+    cursor: pointer;
+    align-self: flex-end;
+  }
+
+  .skipButton:hover {
+    background-color: #5e4c3c;
   }
 </style>

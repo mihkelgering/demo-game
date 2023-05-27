@@ -3,6 +3,7 @@
     const dispatch = createEventDispatcher()
 
     const codeEntered =  (code: string) => {
+        console.log(code)
         dispatch('codeEntered', code)
     }
     export let idCode = "";
@@ -35,6 +36,12 @@
 
 <style>
 
+  :global(body) {
+    color: #483628;
+    background: #101419;
+    overflow-y: scroll;
+  }
+
   .header-content {
     display: flex;
     align-items: center;
@@ -54,6 +61,7 @@
   }
   .credentials-button {
     margin-top: 1rem;
+    margin-bottom: 1rem;
     width: 100%;
     height: 3rem;
     border-radius: 20px;
@@ -103,9 +111,20 @@
   }
 
   .error {
-    color: red;
+    color: rgb(255, 84, 84);
     margin: 0;
-    margin-top: 5px;
+    margin-top: 8px;
   }
+
+
+  @media only screen and (max-width: 500px) {
+    .credentials {
+        margin-top: 90px;
+    }
+
+    .credentials-input {
+        font-size: 0.9rem;
+    }
+}
 
 </style>

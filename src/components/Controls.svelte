@@ -43,7 +43,7 @@
    }}
  >
    <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#411001" stroke-width="1">
+     <g fill="none" stroke="#483628" stroke-width="1">
        <path transform="rotate(0)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
      </g>
    </svg>
@@ -55,7 +55,7 @@
    }}
  >
    <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#411001" stroke-width="1">
+     <g fill="none" stroke="#483628" stroke-width="1">
        <path transform="rotate(90)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
      </g>
    </svg>
@@ -67,7 +67,7 @@
    }}
  >
    <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#411001" stroke-width="1">
+     <g fill="none" stroke="#483628" stroke-width="1">
        <path transform="rotate(180)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
      </g>
    </svg>
@@ -79,18 +79,19 @@
    }}
  >
    <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#411001" stroke-width="1">
+     <g fill="none" stroke="#483628" stroke-width="1">
        <path transform="rotate(270)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
      </g>
    </svg>
  </button>
  <button style:grid-area="reset" on:click={reset}>
    <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#411001" stroke-width="1">
+     <g fill="none" stroke="#483628" stroke-width="1">
        <circle r="4" />
      </g>
    </svg>
  </button>
+
 </div>
 
 <style>
@@ -111,8 +112,21 @@
     display: block;
     padding: 0.5rem;
     background: #C7D100;
-    border: 0.18rem solid #411001;
-    max-width: 3rem;
+    border: 0.18rem solid #483628;
+    width: 3vw;
+  }
+
+  @media only screen and (max-width: 700px) {
+    button {
+        width: 14vw;
+    }
+}
+
+  @media screen and (min-width: 700px) and (max-width: 900px) {
+    /* your CSS rules here */
+    button {
+        width: 7vw;
+    }
   }
 
   svg {

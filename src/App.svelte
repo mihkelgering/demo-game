@@ -9,6 +9,7 @@
   let error = "";
 
   async function startGame(event: CustomEvent<string>) {
+    console.log(event.detail);
     let data: GameResponse = await api.post("newGame", {
       idCode: event.detail,
       game: "sokoban",
@@ -30,7 +31,7 @@
 
 <div id="container">
   {#if !$game}
-    <Welcome {error} on:codeEntered={() => startGame} />
+    <Welcome {error} on:codeEntered={startGame} />
   {:else if $game.timeRemaining < 1}
     <End/>
   {:else}
@@ -39,7 +40,6 @@
 </div>
 
 <style>
-
   #container {
     display: flex;
     justify-content: center;
@@ -48,10 +48,8 @@
     width: 100vw;
   }
 
-  @media only screen and (max-width: 600px) {
-    #container {
-        height: 120vh;
-    }
-}
-
+  :global(body) {
+    margin: 0;
+    font-family: 'Quicksand', sans-serif;
+  }
 </style>
