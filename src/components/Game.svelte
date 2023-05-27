@@ -183,7 +183,7 @@
   :global(body) {
     color: #483628;
     background: #101419;
-    overflow-y: hidden;
+    overflow-y: scroll;
   }
   article {
     max-width: 30rem;
