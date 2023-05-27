@@ -131,10 +131,15 @@
       crates[crateIndex].row = row + dr;
 
       if (targets.some(({ column: tc, row: tr }) => tc === nc && tr === nr)) {
-        crates[crateIndex].value = CRATE_ON_TARGET;
+        crates = crates.map((crate, i) => {
+          return i === crateIndex ? {...crate, value: CRATE_ON_TARGET} : crate
+      });
       } else {
-        crates[crateIndex].value = CRATE;
+        crates = crates.map((crate, i) => 
+          i === crateIndex ? {...crate, value: CRATE} : crate
+        );
       }
+      console.log(crates)
     }
 
     return true;

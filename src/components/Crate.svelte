@@ -1,7 +1,7 @@
 <script>
   export let crate = { column: 0, row: 0, value: "" };
 
-  $: fill = crate.value === "c" ? "#ed8e30" : "#98453d";
+  $: fill = crate.value === "*" ? "#ed8e30" : "#483628";
 
 </script>
 
