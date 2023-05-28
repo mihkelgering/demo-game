@@ -156,12 +156,11 @@
 
   async function newLevel() {
     let next = selectRandomLevel(maps.length, $game.levels);
-    console.log(next);
     game.update((current) => {
-      return { ...current, levels: [next, ...current.levels] };
+      return { ...current, skipTime: 15, levels: [next, ...current.levels] };
     });
     if (next === -1) return;
-    await api.post<GameState>("newLevel", { idLevel: $game.levels[0] });
+    await api.post("newLevel", { idLevel: $game.levels[0] });
   }
 
   async function endLevel(skipped: boolean) {
@@ -178,9 +177,8 @@
 </script>
 
 <div class="gameContainer">
-
+  <h1>Level {$game.levels.length}</h1>
   <Timer />
-  
   <svg viewBox="0 0 {columns} {rows}">
     <Grid grid={staticMap} />
 
@@ -191,14 +189,20 @@
     <Player {playerPosition} {hasWon} />
   </svg>
 
-  <button class="skipButton" on:click={() => advanceLevel(true)}>Skip</button>
+  {#if $game.skipTime < 0}
+    <button class="skipButton" on:click={() => advanceLevel(true)}>Skip</button>
+  {/if}
 
   <Controls on:move={updatePlayer} on:reset={handleReset} />
-
-
 </div>
 
 <style>
+
+  h1 {
+    margin: 0;
+    color: rgb(228, 227, 227);
+    margin-top: 2vh;
+  }
   .gameContainer {
     display: flex;
     flex-direction: column;

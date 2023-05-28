@@ -9,6 +9,7 @@
       $timer--;
       game.update((game) => {
         game.timeRemaining = $timer;
+        game.skipTime = game.skipTime - 1;
         return game;
       });
     }
@@ -38,7 +39,7 @@
     width: 90%;
     font-weight: bold;
     margin-bottom: 1rem;
-    margin-top: 6vh;
+    margin-top: 2vh;
   }
   progress {
     width: 100%;

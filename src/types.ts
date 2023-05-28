@@ -1,11 +1,10 @@
 export interface GameState {
-    timeRemaining: number;
-    levels: number[];
+  timeRemaining: number;
+  skipTime: number;
+  levels: number[];
 }
 
 export interface GameResponse {
-    error?: string;
-    game?: GameState;
+  error?: string;
+  game?: GameState;
 }
-
-

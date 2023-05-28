@@ -98,6 +98,7 @@
  div {
     display: grid;
     padding-top: 5px;
+    margin-top: 1rem;
     grid-template-columns: repeat(3, auto);
     grid-template-areas: ". up ." "left reset right" ". down .";
     grid-auto-rows: auto;
