@@ -157,7 +157,7 @@
   async function newLevel() {
     let next = selectRandomLevel(maps.length, $game.levels);
     game.update((current) => {
-      return { ...current, skipTime: 15, levels: [next, ...current.levels] };
+      return { ...current, skipTime: 600, levels: [next, ...current.levels] };
     });
     if (next === -1) return;
     await api.post("newLevel", { idLevel: $game.levels[0] });
@@ -168,7 +168,7 @@
   }
 
   function selectRandomLevel(max: number, subsetArray: number[]) {
-    let fullArray = Array.from({length: max}, (_, i) => i + 1);
+    let fullArray = Array.from({length: max}, (_, i) => i);
     let differenceArray = fullArray.filter(num => !subsetArray.includes(num));
     if (differenceArray.length === 0) return -1;
     let randomIndex = Math.floor(Math.random() * differenceArray.length);
