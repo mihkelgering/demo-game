@@ -2,11 +2,15 @@
   import { tweened } from "svelte/motion";
   import { game } from "../store";
 
-  let original = $game.timeRemaining ? $game.timeRemaining : 3600;
+  let original =  $game.timeRemaining;
   let timer = tweened(original);
   setInterval(() => {
     if ($timer > 0) {
       $timer--;
+      game.update((game) => {
+        game.timeRemaining = $timer;
+        return game;
+      });
     }
   }, 1000);
 

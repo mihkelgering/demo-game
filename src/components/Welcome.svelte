@@ -3,7 +3,6 @@
     const dispatch = createEventDispatcher()
 
     const codeEntered =  (code: string) => {
-        console.log(code)
         dispatch('codeEntered', code)
     }
     export let idCode = "";
@@ -20,7 +19,7 @@
     </h1>
     <p>Welcome to our humble puzzle game! In this game your goal is to move boxes onto designated targets.</p>
     <p>Move using the arrow keys or the buttons below the game. Reset a level using the circle button or by pressing the R key. Skip a level by pressing the skip button. Skipping is allowed once every 10 minutes.</p>
-    <p>You have 1 hour. Good luck!</p>
+    <p>You have one hour. Try to complete as many levels as possible. Good luck!</p>
     <input
       class="credentials-input"
       bind:value={idCode}

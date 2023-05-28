@@ -5,11 +5,11 @@
   import { game } from "./store";
   import Welcome from "./components/Welcome.svelte";
   import End from "./components/End.svelte";
+  import maps from "./maps";
 
   let error = "";
 
   async function startGame(event: CustomEvent<string>) {
-    console.log(event.detail);
     let data: GameResponse = await api.post("newGame", {
       idCode: event.detail,
       game: "sokoban",
@@ -32,7 +32,7 @@
 <div id="container">
   {#if !$game}
     <Welcome {error} on:codeEntered={startGame} />
-  {:else if $game.timeRemaining < 1}
+  {:else if $game.timeRemaining < 1 || $game.levels.length > maps.length}
     <End/>
   {:else}
     <Game level={$game.levels[0]} />

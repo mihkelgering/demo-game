@@ -139,7 +139,6 @@
           i === crateIndex ? {...crate, value: CRATE} : crate
         );
       }
-      console.log(crates)
     }
 
     return true;
@@ -156,14 +155,25 @@
   };
 
   async function newLevel() {
+    let next = selectRandomLevel(maps.length, $game.levels);
+    console.log(next);
     game.update((current) => {
-      return { ...current, levels: [1, ...current.levels] };
+      return { ...current, levels: [next, ...current.levels] };
     });
+    if (next === -1) return;
     await api.post<GameState>("newLevel", { idLevel: $game.levels[0] });
   }
 
   async function endLevel(skipped: boolean) {
     return await api.patch("endLevel", { skipped });
+  }
+
+  function selectRandomLevel(max: number, subsetArray: number[]) {
+    let fullArray = Array.from({length: max}, (_, i) => i + 1);
+    let differenceArray = fullArray.filter(num => !subsetArray.includes(num));
+    if (differenceArray.length === 0) return -1;
+    let randomIndex = Math.floor(Math.random() * differenceArray.length);
+    return differenceArray[randomIndex];
   }
 </script>
 
