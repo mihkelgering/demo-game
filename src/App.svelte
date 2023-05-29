@@ -23,7 +23,9 @@
   }
 
   async function loadGame() {
-    game.set(await api.get<GameState>("loadGame"));
+    let data = await api.get<GameState>("loadGame");
+    if (data.levels.length = maps.length) data.timeRemaining = 0;
+    game.set(data);
   }
 
   loadGame();
