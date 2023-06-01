@@ -12,6 +12,11 @@
         game.skipTime = game.skipTime - 1;
         return game;
       });
+    } else {
+      game.update((game) => {
+        game.finished = true;
+        return game;
+      });
     }
   }, 1000);
 

@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { TARGET, WALL } from "../symbols";
+  import { EMPTY, TARGET, WALL } from "../symbols";
 
   export let grid = [];
 </script>
@@ -34,6 +34,11 @@
             stroke-width="0.05"
           >
             <circle r="0.18" />
+          </g>
+        </g>
+        <g id={"cell-" + EMPTY}>
+          <g stroke="#251311" stroke-width="0.02">
+            <rect fill="#ffffff" width="1" height="1" />
           </g>
         </g>
     </defs>

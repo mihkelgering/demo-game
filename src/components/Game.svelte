@@ -23,7 +23,6 @@
 
   $: grid = maps[level].split("\n").map((d, row) =>
     d
-      .trim()
       .split("")
       .map((value, column) => ({
         value,
@@ -159,7 +158,12 @@
     game.update((current) => {
       return { ...current, skipTime: 600, levels: [next, ...current.levels] };
     });
-    if (next === -1) return;
+    if (next === -1) {
+      game.update((current) => {
+        return { ...current, finished: true };
+      });
+      return;
+    };
     await api.post("newLevel", { idLevel: $game.levels[0] });
   }
 
@@ -177,7 +181,7 @@
 </script>
 
 <div class="gameContainer">
-  <h1>Level {$game.levels.length}</h1>
+  <h1>Level {$game.levels[0]}</h1>
   <Timer />
   <svg viewBox="0 0 {columns} {rows}">
     <Grid grid={staticMap} />

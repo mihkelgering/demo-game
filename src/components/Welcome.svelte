@@ -5,9 +5,19 @@
     const codeEntered =  (code: string) => {
         dispatch('codeEntered', code)
     }
+
+    const onEnter = (event) => {
+        if (event.key == 'Enter') {
+            codeEntered(idCode);
+        }
+    }
     export let idCode = "";
     export let error = "";
 </script>
+
+<svelte:window
+    on:keydown={onEnter}
+/>
 
 
 <div class="credentials">

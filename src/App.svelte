@@ -18,13 +18,12 @@
       error = data.error;
       return;
     }
-    game.set({ timeRemaining: 3600, skipTime: 600, levels: [0] });
+    game.set({ timeRemaining: 3600, skipTime: 600, levels: [0], finished: false });
     await api.post("newLevel", { idLevel: $game.levels[0] });
   }
 
   async function loadGame() {
     let data = await api.get<GameState>("loadGame");
-    if (data.levels.length = maps.length) data.timeRemaining = 0;
     game.set(data);
   }
 
@@ -34,7 +33,7 @@
 <div id="container">
   {#if !$game}
     <Welcome {error} on:codeEntered={startGame} />
-  {:else if $game.timeRemaining < 1 || $game.levels.length > maps.length}
+  {:else if $game.finished}
     <End/>
   {:else}
     <Game level={$game.levels[0]} />
