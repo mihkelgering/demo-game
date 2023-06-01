@@ -11,7 +11,7 @@ class Api {
     document.documentElement.classList.add('loading')
     const disabledButtons = this.disableSubmitButtons((init as RequestInit)?.method)
     const body = init?.body
-    return fetch(this.prefix + path, {
+    return fetch(import.meta.env.VITE_API_URL + this.prefix + path, {
       ...init,
       body: body instanceof File || body instanceof FormData || typeof body == 'string' ? body : body && JSON.stringify(body),
       headers: init?.headers ?? headers,
