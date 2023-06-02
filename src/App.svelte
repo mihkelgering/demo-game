@@ -18,7 +18,12 @@
       error = data.error;
       return;
     }
-    game.set({ timeRemaining: 3600, skipTime: 600, levels: [0], finished: false });
+    game.set({
+      timeRemaining: 3600,
+      skipTime: 600,
+      levels: [0],
+      finished: false,
+    });
     await api.post("newLevel", { idLevel: $game.levels[0] });
   }
 
@@ -34,7 +39,7 @@
   {#if !$game}
     <Welcome {error} on:codeEntered={startGame} />
   {:else if $game.finished}
-    <End/>
+    <End />
   {:else}
     <Game level={$game.levels[0]} />
   {/if}
@@ -51,6 +56,7 @@
 
   :global(body) {
     margin: 0;
-    font-family: 'Quicksand', sans-serif;
+    font-family: "Quicksand", sans-serif;
+    overflow: hidden;
   }
 </style>
