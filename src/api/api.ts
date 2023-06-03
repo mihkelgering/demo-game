@@ -4,7 +4,7 @@ export const headers = {'Content-Type': 'application/json; charset=UTF-8', 'Acce
 type Body = object|string|FormData|File
 
 class Api {
-  prefix = '/api/'
+  prefix = import.meta.env.MODE == 'development' ? '/api/' : '/game/api/'
 
   request(path: string, init?: RequestInit | {body?: Body, headers?: HeadersInit}): Promise<Response> {
     if (path.startsWith('/')) throw new Error('Invalid path: ' + path)
