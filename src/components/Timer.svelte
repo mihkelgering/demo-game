@@ -5,8 +5,8 @@
   let original =  $game.timeRemaining;
   let timer = tweened(original);
   setInterval(() => {
+    $timer--;
     if ($timer > 0) {
-      $timer--;
       game.update((game) => {
         game.timeRemaining = $timer;
         game.skipTime = game.skipTime - 1;

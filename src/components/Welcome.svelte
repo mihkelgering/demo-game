@@ -27,9 +27,9 @@
         <span id="gameWord">game</span>
       </div>
     </h1>
-    <p>Welcome to our humble puzzle game! In this game your goal is to move boxes onto designated targets.</p>
+    <p>Welcome to our humble puzzle game!</p>
     <p>Move using the arrow keys or the buttons below the game. Reset a level using the circle button or by pressing the R key. Skip a level by pressing the skip button. Skipping is allowed once every 10 minutes.</p>
-    <p>You have one hour. Try to complete as many levels as possible. Good luck!</p>
+    <p>You have one hour. Try to complete as many levels as possible. Try your best, do not worry about the results. Good luck!</p>
     <input
       class="credentials-input"
       bind:value={idCode}
