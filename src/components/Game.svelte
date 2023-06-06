@@ -15,7 +15,6 @@
   } from "../symbols";
   import { game } from "../store";
   import api from "../api/api";
-  import type { GameState } from "../types";
   import Timer from "./Timer.svelte";
 
   export let level;
@@ -156,7 +155,7 @@
   async function newLevel() {
     let next = selectRandomLevel(maps.length, $game.levels);
     game.update((current) => {
-      return { ...current, skipTime: 600, levels: [next, ...current.levels] };
+      return { ...current, skipTime: 300, levels: [next, ...current.levels] };
     });
     if (next === -1) {
       game.update((current) => {
@@ -193,7 +192,9 @@
     <Player {playerPosition} {hasWon} />
   </svg>
 
-  {#if $game.skipTime < 0}
+  <p>Reset level: R Key</p>
+
+  {#if $game.skipTime <= 0}
     <button class="skipButton" on:click={() => advanceLevel(true)}>Skip</button>
   {/if}
 
@@ -240,5 +241,10 @@
 
   .skipButton:hover {
     background-color: #5e4c3c;
+  }
+
+  p {
+    color: rgb(228, 227, 227);
+    font-size: 0.6rem;
   }
 </style>

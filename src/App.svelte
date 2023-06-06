@@ -5,7 +5,6 @@
   import { game } from "./store";
   import Welcome from "./components/Welcome.svelte";
   import End from "./components/End.svelte";
-  import maps from "./maps";
 
   let error = "";
 
@@ -20,11 +19,11 @@
     }
     game.set({
       timeRemaining: 3600,
-      skipTime: 600,
-      levels: [0],
+      skipTime: 300,
+      levels: [15],
       finished: false,
     });
-    await api.post("newLevel", { idLevel: $game.levels[0] });
+    await api.post("newLevel", { idLevel: $game.levels[15] });
   }
 
   async function loadGame() {
