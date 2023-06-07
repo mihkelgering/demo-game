@@ -37,7 +37,7 @@
           </g>
         </g>
         <g id={"cell-" + EMPTY}>
-          <g stroke="#251311" stroke-width="0.02">
+          <g stroke="#101419" stroke-width="0.02">
             <rect fill="#101419" width="1" height="1" />
           </g>
         </g>
