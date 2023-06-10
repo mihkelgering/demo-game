@@ -14,8 +14,7 @@ class Api {
     return fetch(import.meta.env.VITE_API_URL + this.prefix + path, {
       ...init,
       body: body instanceof File || body instanceof FormData || typeof body == 'string' ? body : body && JSON.stringify(body),
-      headers: init?.headers ?? headers,
-      credentials: 'include'
+      headers: {'Authorization': `Bearer ${localStorage.getItem('koodGame')}`, ...init?.headers ?? headers},
     })
     .catch(this.handleFetchFailure)
     .finally(() => {

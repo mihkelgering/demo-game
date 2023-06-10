@@ -9,7 +9,7 @@
   let error = "";
 
   async function startGame(event: CustomEvent<string>) {
-    let data: GameResponse = await api.post("newGame", {
+    let data: Game | {error: string} = await api.post("newGame", {
       idCode: event.detail,
       game: "sokoban",
     });
@@ -17,6 +17,8 @@
       error = data.error;
       return;
     }
+    data = data as Game;
+    localStorage.setItem("koodGame", data.idToken)
     game.set({
       timeRemaining: 3600,
       skipTime: 300,
@@ -48,8 +50,8 @@
   #container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
+    align-items: center; 
+    height: 100vh; 
     width: 100vw;
   }
 
@@ -57,5 +59,19 @@
     margin: 0;
     font-family: "Quicksand", sans-serif;
     overflow: hidden;
+    color: #483628;
+    background: #101419;
   }
+
+  @media only screen and (max-width: 900px) {
+    :global(body) {
+      overflow: auto;
+    }
+
+    #container {
+      height: auto;
+    }
+  }
+
+
 </style>

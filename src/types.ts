@@ -7,5 +7,13 @@ export interface GameState {
 
 export interface GameResponse {
   error?: string;
-  game?: GameState;
+  game?: Game;
+}
+
+export interface Game {
+	id:        number
+	idCode:    string
+	idToken:   string   
+	game:      string 
+	startTime: Date 
 }
