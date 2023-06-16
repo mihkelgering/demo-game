@@ -25,7 +25,7 @@
       levels: [15],
       finished: false,
     });
-    await api.post("newLevel", { idLevel: $game.levels[15] });
+    await api.post("newLevel", { idLevel: $game.levels[0] });
   }
 
   async function loadGame() {
