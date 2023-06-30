@@ -1,7 +1,7 @@
 <script lang="ts">
   import api from "./api/api";
   import Game from "./components/Game.svelte";
-  import { type GameResponse, type GameState } from "./types";
+  import {type GameState } from "./types";
   import { game } from "./store";
   import Welcome from "./components/Welcome.svelte";
   import End from "./components/End.svelte";
@@ -21,8 +21,7 @@
     localStorage.setItem("koodGame", data.idToken)
     game.set({
       timeRemaining: 3600,
-      skipTime: 300,
-      levels: [15],
+      levels: [0],
       finished: false,
     });
     await api.post("newLevel", { idLevel: $game.levels[0] });

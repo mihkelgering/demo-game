@@ -28,8 +28,8 @@
       </div>
     </h1>
     <p>Welcome to our humble puzzle game!</p>
-    <p>Move using the arrow keys or the buttons below the game. Reset a level using the circle button or by pressing the R key. Skip a level by pressing the skip button. Skipping is allowed once every 5 minutes.</p>
-    <p>You have one hour. Some levels are easy, some very hard. They come in random order in order for us to gether info about more levels. Try your best, but do not worry about the results, the number of completed levels is not important for the Selection Sprint. Good luck!</p>
+    <p>Move using the arrow keys or the buttons below the game. Reset a level using the circle button or by pressing the R key. Undo your latest move by pressing "Undo" or the U key.</p>
+    <p>You have one hour. Try to get as far as possible. Good luck!</p>
     <input
       class="credentials-input"
       bind:value={idCode}

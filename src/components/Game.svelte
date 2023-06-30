@@ -19,6 +19,7 @@
 
   export let level;
   let hasWon = false;
+  let disableButtons = false;
 
   $: grid = maps[level].split("\n").map((d, row) =>
     d
@@ -33,7 +34,7 @@
   $: columns = grid[0].length;
   $: rows = grid.length;
 
-  $: tiles = grid.flat();
+  $: tiles = [...grid.flat()];
   $: staticMap = tiles.map((tile) => {
     if (tile.value === CRATE || tile.value === PLAYER)
       return { ...tile, value: EMPTY };
@@ -59,19 +60,25 @@
     row: player.row,
   };
 
-  const updatePlayer = async (event) => {
+  let previousCrates = [];
+  let previousPlayerPosition = {};
+
+  const updatePlayer =  async (event) => {
     if (hasWon) return;
     let [columnDirection, rowDirection] = directions[event.detail.key];
     let { column, row } = getNewPosition(columnDirection, rowDirection);
 
     if (newPositionIsWall(row, column)) return;
+    if (crateBlocksMovement(row, column, columnDirection, rowDirection)) return
 
-    let canMoveCrate = moveCrate(row, column, columnDirection, rowDirection);
+    previousCrates = JSON.parse(JSON.stringify(crates))
+    previousPlayerPosition = {...playerPosition}
 
-    if (canMoveCrate) movePlayer(row, column);
+    moveCrate(row, column, columnDirection, rowDirection);
+    movePlayer(row, column);
 
     if (playerWon()) {
-      advanceLevel(false);
+      await advanceLevel(false);
     }
   };
 
@@ -81,6 +88,8 @@
     crates = tiles
       .filter(({ value }) => value === CRATE || value === CRATE_ON_TARGET)
       .map((crate) => ({ ...crate }));
+    previousCrates = JSON.parse(JSON.stringify(crates));
+    previousPlayerPosition = {...playerPosition}
   };
 
   const newPositionIsWall = (row: number, column: number) => {
@@ -112,18 +121,30 @@
     };
   };
 
+  function crateBlocksMovement(row: number, column: number, directionColumn: number, directionRow: number) {
+        const crateIndex = getCrateIndex(row, column)
+        if (crateIndex !== -1) {
+            const newColumn = column + directionColumn;
+            const newRow = row + directionRow;
+
+            if (grid[newRow][newColumn].value === WALL) return true;
+            if (crates.find(({column: crateColumn, row: crateRow}) => crateColumn === newColumn && crateRow === newRow)) return true;
+        }
+        return false
+    }
+
+  function getCrateIndex(row:number, column: number){
+        return crates.findIndex(
+            ({column: cc, row: rc}) => cc === column && rc === row
+        );
+    }
+
   const moveCrate = (row: number, column: number, dc: number, dr: number) => {
-    const crateIndex = crates.findIndex(
-      ({ column: cc, row: rc }) => cc === column && rc === row
-    );
+    const crateIndex = getCrateIndex(row, column)
 
     if (crateIndex !== -1) {
       const nc = column + dc;
       const nr = row + dr;
-
-      if (grid[nr][nc].value === WALL) return false;
-      if (crates.find(({ column: cc, row: rc }) => cc === nc && rc === nr))
-        return false;
 
       crates[crateIndex].column = column + dc;
       crates[crateIndex].row = row + dr;
@@ -143,21 +164,27 @@
   };
 
   const advanceLevel = async (skipped: boolean) => {
+    disableButtons = true;
     let response: any = await endLevel(skipped);
-    if (response) return;
+    if (response) {
+      disableButtons = false
+      return;
+    }
     hasWon = true;
     await new Promise((r) => setTimeout(r, 2000));
     await newLevel();
     await new Promise((r) => setTimeout(r, 500));
     hasWon = false;
+    disableButtons = false;
+
   };
 
   async function newLevel() {
-    let next = selectRandomLevel(maps.length, $game.levels);
+    let next = $game.levels[0] + 1;
     game.update((current) => {
-      return { ...current, skipTime: 300, levels: [next, ...current.levels] };
+      return { ...current, levels: [next, ...current.levels] };
     });
-    if (next === -1) {
+    if (next > maps.length - 1) {
       game.update((current) => {
         return { ...current, finished: true };
       });
@@ -170,12 +197,9 @@
     return await api.patch("endLevel", { skipped });
   }
 
-  function selectRandomLevel(max: number, subsetArray: number[]) {
-    let fullArray = Array.from({length: max}, (_, i) => i);
-    let differenceArray = fullArray.filter(num => !subsetArray.includes(num));
-    if (differenceArray.length === 0) return -1;
-    let randomIndex = Math.floor(Math.random() * differenceArray.length);
-    return differenceArray[randomIndex];
+  const handleUndo = () => {
+    crates = JSON.parse(JSON.stringify(previousCrates))
+    playerPosition = {...previousPlayerPosition} as {column: number, row: number}
   }
 </script>
 
@@ -192,13 +216,9 @@
     <Player {playerPosition} {hasWon} />
   </svg>
 
-  <p>Reset level: R Key</p>
+  <p>Move: Arrows|AWSD -- Reset: R -- Undo: U -- Skip: N</p>
 
-  {#if $game.skipTime <= 0}
-    <button class="skipButton" on:click={() => advanceLevel(true)}>Skip</button>
-  {/if}
-
-  <Controls on:move={updatePlayer} on:reset={handleReset} />
+  <Controls {disableButtons} on:move={updatePlayer} on:reset={handleReset} on:skip={() => advanceLevel(true)} on:undo={handleUndo} />
 </div>
 
 <style>
@@ -224,27 +244,8 @@
     }
 }
 
-  .skipButton {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    border: none;
-    width: 20%;
-    color: white;
-    background-color: #483628;
-    font-size:1.5vh;
-    font-weight: bold;
-    cursor: pointer;
-    align-self: flex-end;
-  }
-
-  .skipButton:hover {
-    background-color: #5e4c3c;
-  }
-
   p {
     color: rgb(228, 227, 227);
-    font-size: 0.6rem;
+    font-size: 0.7rem;
   }
 </style>

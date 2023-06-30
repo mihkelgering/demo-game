@@ -1,5 +1,8 @@
 <script lang='ts'>
   import { createEventDispatcher } from 'svelte';
+
+  export let disableButtons = false;
+
   const dispatch = createEventDispatcher()
 
   const move =  (key: string) => {
@@ -9,9 +12,18 @@
   const reset = () => {
     dispatch('reset')
   }
+
+  const skip = () => {
+    dispatch('skip')
+  }
+
+  const undo = () => {
+    dispatch('undo')
+  }
   
   // TODO: Throttle events
   function onkeydown(event) {
+        if (disableButtons) return;
         if (event.key == 'ArrowUp' || event.key == 'w') {
           move("up");
         }
@@ -27,6 +39,12 @@
         else if (event.key == 'r') {
           reset();
         }
+        else if (event.key == 'u') {
+          undo();
+        }
+        else if (event.key == 'n') {
+          skip();
+        }
     }
 
 
@@ -35,76 +53,80 @@
     on:keydown={onkeydown}
 />
  
-<div>
- <button
-   style:grid-area="up"
-   on:click={() => {
-     move("up");
-   }}
- >
-   <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#483628" stroke-width="1">
-       <path transform="rotate(0)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
-     </g>
-   </svg>
- </button>
- <button
-   style:grid-area="right"
-   on:click={() => {
-     move("right");
-   }}
- >
-   <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#483628" stroke-width="1">
-       <path transform="rotate(90)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
-     </g>
-   </svg>
- </button>
- <button
-   style:grid-area="down"
-   on:click={() => {
-     move("down");
-   }}
- >
-   <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#483628" stroke-width="1">
-       <path transform="rotate(180)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
-     </g>
-   </svg>
- </button>
- <button
-   style:grid-area="left"
-   on:click={() => {
-     move("left");
-   }}
- >
-   <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#483628" stroke-width="1">
-       <path transform="rotate(270)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
-     </g>
-   </svg>
- </button>
- <button style:grid-area="reset" on:click={reset}>
-   <svg viewBox="-5 -5 10 10">
-     <g fill="none" stroke="#483628" stroke-width="1">
-       <circle r="4" />
-     </g>
-   </svg>
- </button>
-
+<button class="skip" on:click={skip}>Skip</button>
+<div class='controls'>
+ <div class='moveButtons'>
+  <button
+    style:grid-area="up"
+    on:click={() => {
+      move("up");
+    }}
+    disabled={disableButtons}
+  >
+    <svg viewBox="-5 -5 10 10">
+      <g fill="none" stroke="#483628" stroke-width="1">
+        <path transform="rotate(0)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
+      </g>
+    </svg>
+  </button>
+  <button
+    style:grid-area="right"
+    on:click={() => {
+      move("right");
+    }}
+    disabled={disableButtons}
+  >
+    <svg viewBox="-5 -5 10 10">
+      <g fill="none" stroke="#483628" stroke-width="1">
+        <path transform="rotate(90)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
+      </g>
+    </svg>
+  </button>
+  <button
+    style:grid-area="down"
+    on:click={() => {
+      move("down");
+    }}
+    disabled={disableButtons}
+  >
+    <svg viewBox="-5 -5 10 10">
+      <g fill="none" stroke="#483628" stroke-width="1">
+        <path transform="rotate(180)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
+      </g>
+    </svg>
+  </button>
+  <button
+    style:grid-area="left"
+    on:click={() => {
+      move("left");
+    }}
+    disabled={disableButtons}
+  >
+    <svg viewBox="-5 -5 10 10">
+      <g fill="none" stroke="#483628" stroke-width="1">
+        <path transform="rotate(270)" d="M 0 -4 l 3 3 v 5 h -6 v -5z" />
+      </g>
+    </svg>
+  </button>
+ </div>
+ <div class='extraButtons'>
+  <button class="extraButton" disabled={disableButtons} on:click={undo}>Undo</button>
+  <button class="extraButton" disabled={disableButtons} on:click={reset}>Reset</button>
+ </div>
 </div>
 
 <style>
- div {
+ .moveButtons {
     display: grid;
     padding-top: 5px;
     margin-top: 1rem;
     grid-template-columns: repeat(3, auto);
-    grid-template-areas: ". up ." "left reset right" ". down .";
+    grid-template-areas: ". up ." "left . right" ". down .";
     grid-auto-rows: auto;
     gap: 0.25rem;
     justify-content: center;
     justify-items: center;
+    width: 30%;
   }
 
   button {
@@ -115,6 +137,7 @@
     background: #C7D100;
     border: 0.18rem solid #483628;
     width: 3vw;
+    cursor: pointer
   }
 
   @media only screen and (max-width: 700px) {
@@ -135,4 +158,67 @@
     width: 100%;
     height: auto;
   }
+
+  .extraButtons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+  }
+
+  .extraButton {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    width: 30%;
+    min-width: 100px;
+    color: white;
+    background-color: #483628;
+    font-size:1.5vh;
+    font-weight: bold;
+    cursor: pointer;
+
+  }
+
+  .extraButton:hover {
+    background-color: #5e4c3c;
+  }
+
+  .skip {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    width: 10%;
+    min-width: 100px;
+    color: white;
+    background-color: #483628;
+    font-size:1.5vh;
+    font-weight: bold;
+    cursor: pointer;
+    position: absolute;
+    left: 10px;
+    top: 0;
+  }
+
+  .controls {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media only screen and (max-width: 900px) {
+    .controls {
+      flex-direction: column;
+    }
+    .extraButtons {
+      margin-top: 30px;
+    }
+  }
+
 </style>
