@@ -9,7 +9,6 @@
     if ($timer > 0) {
       game.update((game) => {
         game.timeRemaining = $timer;
-        game.skipTime = game.skipTime - 1;
         return game;
       });
     } else {
