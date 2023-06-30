@@ -242,7 +242,13 @@
     .gameContainer {
       width: 90%;
     }
-}
+  }
+
+  @media only screen and (max-width: 800px) {
+    p {
+     display: none;
+    }
+  }
 
   p {
     color: rgb(228, 227, 227);
