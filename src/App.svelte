@@ -72,5 +72,9 @@
     }
   }
 
+  * {
+    touch-action: manipulation;
+  }
+
 
 </style>
