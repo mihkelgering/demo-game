@@ -28,7 +28,7 @@
       </div>
     </h1>
     <p>Welcome to our humble puzzle game!</p>
-    <p>Move using the arrow keys or the buttons below the game. Reset a level using the circle button or by pressing the R key. Undo your latest move by pressing Undo or the U key. Skip by pressing the Skip button or the S key</p>
+    <p>Move using the arrow keys or the buttons below the game. Reset a level using the circle button or by pressing the R key. Undo your latest move by pressing Undo or the U key. Skip by pressing the Skip button when it appears.</p>
     <p>You have one hour. The levels get progressively harder. Skipping a level is allowed after trying for at least 5 minutes.
     <p>Complete as many levels as possible. Try your best for the full hour as you did during the real admission game. Your efforts will be taken into account in the final selection process. Good luck!</p>
     <input

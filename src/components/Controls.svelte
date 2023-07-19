@@ -1,6 +1,6 @@
 <script lang='ts'>
   import { createEventDispatcher } from 'svelte';
-
+  import { game } from "../store";
   export let disableButtons = false;
 
   const dispatch = createEventDispatcher()
@@ -42,9 +42,9 @@
         else if (event.key == 'u') {
           undo();
         }
-        else if (event.key == 'n') {
-          skip();
-        }
+        //else if (event.key == 'n') {
+        //  skip();
+        //}
     }
 
 
@@ -53,7 +53,9 @@
     on:keydown={onkeydown}
 />
  
+{#if $game.skipTime < 1}
 <button class="skip" on:click={skip}>Skip</button>
+{/if}
 <div class='controls'>
  <div class='moveButtons'>
   <button

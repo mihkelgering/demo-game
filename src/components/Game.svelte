@@ -182,7 +182,7 @@
   async function newLevel() {
     let next = $game.levels[0] + 1;
     game.update((current) => {
-      return { ...current, levels: [next, ...current.levels] };
+      return { ...current, skipTime: 300, levels: [next, ...current.levels] };
     });
     if (next > maps.length - 1) {
       game.update((current) => {
@@ -216,7 +216,7 @@
     <Player {playerPosition} {hasWon} />
   </svg>
 
-  <p>Move: Arrows|AWSD -- Reset: R -- Undo: U -- Skip: N</p>
+  <p>Move: Arrows|AWSD -- Reset: R -- Undo: U </p>
 
   <Controls {disableButtons} on:move={updatePlayer} on:reset={handleReset} on:skip={() => advanceLevel(true)} on:undo={handleUndo} />
 </div>
