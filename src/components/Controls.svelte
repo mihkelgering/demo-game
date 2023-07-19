@@ -20,6 +20,13 @@
   const undo = () => {
     dispatch('undo')
   }
+
+  let skipTime: number;
+
+  $: {
+        skipTime = $game.skipTime;
+    }
+ 
   
   // TODO: Throttle events
   function onkeydown(event) {
@@ -53,7 +60,7 @@
     on:keydown={onkeydown}
 />
  
-{#if $game.skipTime < 1}
+{#if skipTime < 1}
 <button class="skip" on:click={skip}>Skip</button>
 {/if}
 <div class='controls'>
