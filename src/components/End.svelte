@@ -2,6 +2,7 @@
     <h1>The game is finished</h1>
     <h3>Thank you for playing!</h3>
     <img src="logo.svg" alt="kood/"/>
+    <a href="https://forms.gle/qXFuXLixvVaTGdTVA ">Leave feedback</a>
 </div>
 
 <style>
@@ -24,5 +25,10 @@
 
     h3 {
         font-size: 1.5rem;
+    }
+
+    a {
+        font-size: 1.5rem;
+        margin-top: 15px;
     }
 </style>

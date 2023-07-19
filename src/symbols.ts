@@ -4,7 +4,7 @@ const WALL = "#";
 const TARGET = ".";
 const PLAYER_ON_TARGET = "+";
 const CRATE_ON_TARGET = "*";
-const EMPTY = " ";
+const EMPTY = "_";
 
 export {
   CRATE_ON_TARGET,
