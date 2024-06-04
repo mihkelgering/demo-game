@@ -2,23 +2,13 @@
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher()
 
-    const codeEntered =  (code: string) => {
-        dispatch('codeEntered', code)
+    const startGame =  () => {
+        dispatch('startGame')
     }
 
-    const onEnter = (event) => {
-        if (event.key == 'Enter') {
-            codeEntered(idCode);
-        }
-    }
-    export let idCode = "";
+
     export let error = "";
 </script>
-
-<svelte:window
-    on:keydown={onEnter}
-/>
-
 
 <div class="credentials">
     <h1>
@@ -31,15 +21,11 @@
     <p>Move using the arrow keys or the buttons below the game. Reset a level using the circle button or by pressing the R key. Undo your latest move by pressing Undo or the U key. Skip by pressing the Skip button when it appears.</p>
     <p>You have one hour. The levels get progressively harder. Skipping a level is allowed after trying for at least 5 minutes.
     <p>Complete as many levels as possible. Try your best for the full hour as you did during the real admission game. Your efforts will be taken into account in the final selection process. Good luck!</p>
-    <input
-      class="credentials-input"
-      bind:value={idCode}
-      placeholder="Enter national ID code"
-    />
+
     {#if error}
       <p class="error">{error}</p>
     {/if}
-    <button class="credentials-button" on:click={() => codeEntered(idCode)}
+    <button class="credentials-button" on:click={startGame}
       >Start playing</button
     >
   </div>

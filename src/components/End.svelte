@@ -13,7 +13,7 @@
         justify-content: center;
         width: 50vw;
         height: 50vh;
-        color:rgb(180, 180, 180);
+        color: rgb(180, 180, 180);
         overflow-y: hidden;
     }
 

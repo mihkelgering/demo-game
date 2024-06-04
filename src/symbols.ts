@@ -7,11 +7,11 @@ const CRATE_ON_TARGET = "*";
 const EMPTY = "_";
 
 export {
-  CRATE_ON_TARGET,
-  CRATE,
-  PLAYER,
-  PLAYER_ON_TARGET,
-  TARGET,
-  WALL,
-  EMPTY,
+    CRATE_ON_TARGET,
+    CRATE,
+    PLAYER,
+    PLAYER_ON_TARGET,
+    TARGET,
+    WALL,
+    EMPTY,
 };
